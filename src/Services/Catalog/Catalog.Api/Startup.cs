@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Catalog.Persistence.Database;
 using Catalog.Service.Queries;
+using Common.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -56,7 +57,7 @@ namespace Catalog.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -64,6 +65,11 @@ namespace Catalog.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog.Api v1"));
             }
+
+            loggerFactory.AddSyslog(
+                Configuration.GetValue<string>("Papertrail:host"),
+                Configuration.GetValue<int>("Papertrail:port")
+            );
 
             app.UseHttpsRedirection();
 

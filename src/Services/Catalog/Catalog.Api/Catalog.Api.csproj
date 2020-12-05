@@ -11,5 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Catalog.Service.Queries\Catalog.Service.Queries.csproj" />
     <ProjectReference Include="..\Catalog.Service.EventHandlers\Catalog.Service.EventHandlers.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.Logging\Common.Logging.csproj" />
   </ItemGroup>
 </Project>
