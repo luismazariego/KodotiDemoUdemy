@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Catalog.Persistence.Database;
 using Catalog.Service.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -45,6 +47,7 @@ namespace Catalog.Api
                 );
 
             services.AddTransient<IProductQueryService, ProductQueryService>();
+            services.AddMediatR(Assembly.Load("Catalog.Service.EventHandlers"));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
