@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Catalog.Persistence.Database\Catalog.Persistence.Database.csproj" />
+    <ProjectReference Include="..\..\Common\Services.Common.Paging\Services.Common.Paging.csproj" />
+    <ProjectReference Include="..\..\Common\Services.Common.Mapping\Services.Common.Mapping.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

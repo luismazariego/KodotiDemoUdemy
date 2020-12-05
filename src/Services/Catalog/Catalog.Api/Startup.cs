@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalog.Persistence.Database;
+using Catalog.Service.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,11 +29,22 @@ namespace Catalog.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var osName = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+            
+            var conn = Configuration.GetConnectionString("DefaultConnection");
+
+            if (osName.Contains("Windows"))
+            {
+                conn = Configuration.GetConnectionString("WindowsConnection");
+            }
+            
             services.AddDbContextPool<CatalogContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
-                x => x.MigrationsHistoryTable("_EFMigrations", "Catalog")
-                )
-            );
+                    opt.UseSqlServer(conn,
+                    x => x.MigrationsHistoryTable("_EFMigrations", "Catalog")
+                    )
+                );
+
+            services.AddTransient<IProductQueryService, ProductQueryService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

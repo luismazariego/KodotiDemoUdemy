@@ -12,7 +12,7 @@ namespace Services.Common.Collection
 
         public bool HasItems
         {
-            get => Items != null && Items.Any();
+            get => Items is not null && Items.Any();            
         }
     }
 }
