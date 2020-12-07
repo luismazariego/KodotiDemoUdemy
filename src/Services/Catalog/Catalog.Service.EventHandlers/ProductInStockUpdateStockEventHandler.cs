@@ -22,7 +22,6 @@ namespace Catalog.Service.EventHandlers
         {
             _context = context;
             _logger = logger;
-
         }
         public async Task Handle(ProductInStockUpdateStockCommand command, CancellationToken cancellationToken)
         {
