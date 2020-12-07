@@ -6,14 +6,17 @@ using System.Threading.Tasks;
 using Catalog.Persistence.Database;
 using Catalog.Service.Queries;
 using Common.Logging;
+using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -47,6 +50,10 @@ namespace Catalog.Api
                     )
                 );
 
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddDbContextCheck<CatalogContext>();
+
             services.AddTransient<IProductQueryService, ProductQueryService>();
             services.AddMediatR(Assembly.Load("Catalog.Service.EventHandlers"));
             services.AddControllers();
@@ -79,6 +86,11 @@ namespace Catalog.Api
 
             app.UseEndpoints(endpoints =>
             {
+                _ = endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
                 endpoints.MapControllers();
             });
         }
